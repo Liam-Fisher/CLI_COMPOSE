@@ -1,0 +1,38 @@
+
+Columns
+[name s]
+[root f]
+[rank i]
+[primes l]
+[cents l]
+[steps l]
+[vals l]
+[tuningmap s]
+
+
+// a unique name is required
+name: string (default: TET)
+
+// this is the frequency at "A5"
+root: float (default: 440) 
+
+// rank must be greater than 0
+rank: int (default: 1)
+
+// these are the "nth primes", i.e. [1, 3, 4] refers to [2, 5, 7]
+primes: int[]  (default: 1 2 3)
+
+// length(cents) = rank
+cents: float[]  (default: 100)
+
+// length(steps) = rank
+steps: int[] (default: 1)
+
+// a matrix with ncols = rank (number of lllls) and nrows = length(primes)
+vals: int[][] (default: [12 19 28])
+
+// the matrix product of cents (as a row matrix) and vals
+map: float([]|[][]|[][][]...) (default: [12 19 28])
+
+
+

@@ -1,0 +1,20 @@
+$scaleRoot = $x1 ||| 69;
+
+$mima = minmax($x1 @maxdepth 2) ;
+print(`mima $mima);
+$mid = cents(($mima:3 + $mima:1)/2) ;
+print(`mid $mid);
+if $mid < 6000 then (
+if $mid > 4000 then $clef = `F 
+else if $mid > 3000 then $clef = `F8vb
+else $clef = `F15mb 
+)
+else if $mid > 8000 then (
+if $mid < 9000 then $clef = `G8va
+else $clef = `G15ma 
+)
+else (
+    $clef = `G
+);
+[`clefs $clef ] [ `voicenames ActivePerformer.'info'.'instrument' ]
+[ `slotinfo ActivePerformer.'header'.'slotinfo' ]

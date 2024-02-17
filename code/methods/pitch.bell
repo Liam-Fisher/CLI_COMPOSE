@@ -1,0 +1,10 @@
+DegToCt = ($steps, $scale, $root = 72 -> (
+$sLen = length($scale);
+print(`sLen $sLen);
+$oct = floor($steps/$sLen);
+$inds = (abs(($steps % $sLen) + $sLen) % $sLen)+1;
+print(`inds $inds);
+print(`oct $oct);
+print(`scaleVal $scale:[$inds]);
+pitch(($scale:[$inds] + $root + $oct*12)*100) 
+))

@@ -1,0 +1,21 @@
+ActiveSlotGroup = ActiveSlotGroup;
+$chords = length($x1);
+$notes = length(flat($x1))/$chords;
+
+$chordChange =  $chords-length(ActiveSlotGroup);
+$noteChange =  $notes-length(ActiveSlotGroup::1);
+
+if $chordChange != 0 then (
+if $chordChange > 0 then ActiveSlotGroup _= [] :* $chordChange
+else ActiveSlotGroup = ActiveSlotGroup.slice($chordChange)::1
+);
+for $addr in 1...$chords do (
+    $noteChange =  $notes-length(ActiveSlotGroup::$addr);
+    if $noteChange then (
+        if $noteChange > 0 then $newNotes = [(ActiveSlotGroup::$addr) ([[]] :* $noteChange)]
+        else $newNotes = (ActiveSlotGroup::$addr).slice($noteChange):1;
+        ActiveSlotGroup = ActiveSlotGroup.subs($addr, $newNotes)
+        )
+);
+$chords $notes
+

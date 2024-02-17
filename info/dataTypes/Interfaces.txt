@@ -1,0 +1,32 @@
+Data Categories: Parameter, Event, IndexMaps, Sequences, Maps, Spaces,  
+parameter : numbers
+Parameters are measurable data (such as numbers). They are grouped into events.
+
+
+
+event : (Slot)
+creating a single event, with defined parameters, at an undetermined time.
+Events may possess relative time infomation, but are abstracted from absolute time, 
+i.e. an envelope event, though having a defined adsr, does not specify at what
+measure it occurs. 
+ 
+IndexMaps : Contour
+IndexMaps are sequences of measurable parameters,  
+
+
+Sequence: Contour, Rhythm
+Sequence UIs are for creating a sequence of abstract event Classes, i.e. (relative duration, interval)
+sequences elements are more abstract than events, usually a single data type (rat, int, float),
+and thus can be mapped into multiple forms (augmenting rhythms, transposing Contours, etc...) 
+
+
+Spaces
+Space UIs define a set of elements from which the abstract parameters of a sequences are drawn
+Although unordered, they are indexed for practical purposes of memory access.
+contour etc...
+
+matrix  : 
+Matrix UIs are use to concatenate multiple sequences or events into an aggregate form, where 
+events occur simultaneously with different parameters.
+
+notation :

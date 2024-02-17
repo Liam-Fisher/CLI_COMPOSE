@@ -1,0 +1,59 @@
+Columns
+??? CTOR ARG
+[name s]
+[chords l] 
+[velocities l]: 
+[steps i]: 
+[root s]:
+[contour l]: 
+[scale l]: 
+[voices i];
+[elements i]: 
+
+
+// optional 
+[octaves i]: // octaves where pitches occur
+// default 5
+[chords l]: unique set of chord voicings used ***
+// default [[]]
+[progression l]:  indices: chord type, voicing, root degree (scale index)
+// default [1 1 1]
+
+*
+// nil values are inserted when a rest occurs
+
+
+**
+// contour is an llll of signed integers or integer vectors, where each element corresponds to a chord note
+contour: [int|int[]] 
+// unlike most indices, contour can be any integer, with 0 corresponding to the first element
+// of the scale. integers wrap around the scale, so that a contour value of n, with a scale of n elements 
+// is equal to the first element of the scale raised by the period, and a contour value or -1 is equal to the 
+// last element of the scale lowered by the period.
+
+
+
+
+
+***
+  indices: chord type, voicing, root degree (scale index) and octave 
+voicings: int[
+expressed as interval strings (i.e. C5 E5 G5 would have pitch classes 0 4 7 and voicing [4 3]) 
+nil represent single notes.
+voicings are grouped by unique chords (pitchClassSet)
+example: 
+if pitches = 
+[C5] [C5 C6] [C5 G5] [G5] [G5 G6] [C5 G6] [C5 C6 G5] [C5 G5 C6 G6] 
+
+[C5] [C5 C6] [C5 G5] 
+[G5] [G5 G6] [C5 G6]
+[C5 C6 G5] [C5 G5 C6 G6] 
+and tonediv = 2, octaves = [5 6] 
+voicings = [[][12]] [[7][19][12 7][7 5 7]] 
+
+// the number of elements in each sublist of scale is equal to the rank of the tuning used
+// // working with pitch classes gets nasty with anything over rank 1, thoughwhich is where index contours are useful
+// // e.g. seeing the melodic outline of [4] [5] [2] [11] [0] is not particularly challenging 
+// // (just imagine a clock!) but (2 3 1 -1 0) is still somewhat easier to work with, 
+// // and much easier than something like {12, 7}: [-2 4] [1 -1] [-1 2] [-2 5] [0 0] 
+// // (same pattern tempered to quartercommameantone, a rank 2 temperament)

@@ -1,0 +1,13 @@
+Structure Tables (Rhythms, Pitches, Extras, Measures)
+Each table has at at least 5 Columns
+column 1 is always "name"
+column 2 is its primary content info, a required argument to the Constructor
+column 3 is its secondary content info, an optional argument to the Constructor
+if not present, it will be set to a default based on the number of elements in column 2
+
+the last 2 columns are compatibility info with other components
+
+
+
+
+Rhythms ( 

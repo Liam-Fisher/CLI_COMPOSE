@@ -1,0 +1,27 @@
+
+Columns
+[slots l]
+[breakpoints l]
+[rests l]
+[PF i]
+[elements i]
+[name s] 
+
+//optional
+
+[voices i]
+
+// required is an llll of slots for each element, and each note in a non-rest element   
+required: [int, any[]][][][]
+// optional is an llll of breakpoints for each element, and each note in a non-rest element 
+// the trivial breakpoint [0 0 0 velocity] is automatically added when compiling the motive
+optional: [float, float, ?float, ?float][][][]
+// the arguments are: 
+// a normalized float, the relative x-position (time) between the element onset and offset,
+// the change in cents of the element's pitch
+// an optional snormalized float for the curve between this breakpoint and the previous
+// an optional int (1-127), for a change in velocity. 
+// slots_id is the index of a row in the Slots Tables, or 1 if only default slots (25-30) are used
+slots_id: int 
+
+

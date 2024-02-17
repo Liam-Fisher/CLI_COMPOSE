@@ -1,0 +1,33 @@
+init $measures = 1;
+init $mIndex = 0; 
+init $vIndex = 1;
+if contains($x1) == 16 then (
+    $mIndex += 1;
+    if $measures:$vIndex < $mIndex then (
+        $mIndex = 1;
+        $vIndex += 1
+    );
+print(`mIndexA $mIndex);
+print(`vIndexA $vIndex);
+print(`measuresA $measures);
+print(`mLength length($measures));
+if $measures:$vIndex then (
+print(`next );
+$cmd = `next $mIndex $vIndex
+)
+else (
+    $cmd = `done 
+)
+else (
+    $measures = $x1;
+    $mIndex = 0;
+    $vIndex = 1; 
+    $cmd = `start length($measures)
+);
+print(`mIndexB $mIndex);
+print(`vIndexB $vIndex);
+print(`measuresB $measures);
+keep $mIndex;
+keep $vIndex;
+keep $measures;
+$cmd

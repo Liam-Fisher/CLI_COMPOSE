@@ -1,0 +1,55 @@
+@ - context
+$ - API
+# - GLobal Variables
+
+ID -#ID             X
+
+CT -@Contour        X
+
+DN - Dynamics       
+
+FM -@Form           X
+
+RT -@Rhythm         X
+
+MK -@Markings       X
+
+MS -@Measure        X
+
+MT -@Motive         X
+
+PC - PitchClassSet 
+
+PF -#Profile        X
+
+PG - Progression
+
+SG -@SlotGroup      X
+
+SF -$Shelf          X
+
+SI -#ShelfInput     X
+
+SK -#ShelfKeys      X
+
+SL -@Scale          X
+
+SM -#SlotMatrix
+
+SS - SlotSequence   
+
+SO -#ShelfOutput    X
+
+SN -#Context        X
+
+SR -#Score          X
+
+ST - Slot
+
+TP - Tempo          
+
+VC -@Voicing        X
+
+VL -@Velocity X
+
+

@@ -1,0 +1,38 @@
+(<...>, $slots, $rests = [], $HD_id = 1, $bf = 1 1 1 0 0 0 0 0  -> (
+## args are slots, rests, HD_id, 
+if !$argcount then $error = "no argument for slots"
+else $slots = $args(1);
+$vals _= [`name $name][`slots [$slots]];
+
+## rests are the indices of elements treated as rests. 
+## 0 will treat all elements as rests 
+if $argcount > 1 then $rests = $args(2)
+else $rests = [];
+
+##input HD_id as 3rd argument, or by name "@id "
+if $argcount > 2 then $HD_id = $args(3)
+else $HD_id = $id;
+
+##input bitfield codes as 4th argument, or by name "@bf "
+if  $argcount > 3 then $codes = $args(4)
+else $codes = $bf;
+
+if contains($codes) != 2 then $error = "codes must be an int or list of bools "
+else (
+    if length($codes) > 1 then (
+        $bitfield = 0;
+        for $bool $index in $codes do $bitfield += $bool*pow(2, $index-1)
+        )
+        else $bitfield = $codes
+);
+if $codes:1 then (
+$flatSlots = flat($slots, ($codes:2+$codes:3+$codes:4));
+$keys = for $slot in $flatSlots collect $slot::1;
+$keySet = sort(thin($keys))
+)
+else $keySet = flat($slots):1; 
+
+$info = [`codes $bitfield][`keys [$keySet]][`elements length($slots)];
+
+$error ||| ([`slots [$slots]][`rests [$rests]][`HD_id $HD_id] $info)
+))

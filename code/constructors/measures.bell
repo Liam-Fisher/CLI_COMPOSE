@@ -1,0 +1,91 @@
+
+getMeterDur = ($m -> if length($m) == 2 then $m:1/$m:2 else reduce($m.slice(-1)::1, ($x -> $x+$y))/$m:-1 );
+formatMeter = ( $m -> if length($m) == 2 then [$m] else [$m.slice(-1):1 $m:-1] );
+
+MT = ($meters, $tempi -> (
+    
+    $meterIndex = 1;
+    $symDuration = 0;
+    $absDuration = 0; 
+    $meterProgress = 0;
+    $bpm = 60;
+    $pulse = rat(1/(($meters::1):-1));
+
+    for $tempo $tIndex in $tempi with @unwrap 1 do ( ## print(`meterIndex $meterIndex);
+
+    if contains($tempo:1) == 8 then $bpm *= $tempo:1
+    else $bpm = $tempo:1; 
+    $pulse = $tempo:4 ||| $pulse;## print(`pulse $pulse);
+    if $tIndex > 1 then (
+        $avgTempo = (($tempoSeq:-1)*($interp-1)+(2-$interp)*$bpm*$pulse)/2;##print(`avgTempo $avgTempo);
+        $absDuration += $tempoDuration/$avgTempo
+    ); ##print(`absDuration $absDuration);
+    $tempoDuration = $tempo:2 ||| [1 0/1];
+    if  $tempoDuration.depth() == 2 then (
+        $meterCount = ($tempoDuration:(1 1)+$meterIndex)-1; 
+        $tempoDuration = $tempoDuration:(1 2) ||| 0;##print(`meterIndex $meterIndex);  
+        for $futureMeter in $meterIndex...$meterCount do $tempoDuration += getMeterDur($meters::$futureMeter)
+);
+    $interp = $tempo:3 ||| 0;
+    $tempoSeq _= $bpm*$pulse;
+        if $meterIndex <= length($meters) then (##print(`tempoDuration $tempoDuration);
+        $tgtMeter = $meters::$meterIndex;##  print(`tgtMeter $tgtMeter);
+        $tempoOffset = $meterProgress;
+        $meterProgress += $tempoDuration;##          print(`meterProgressAccum $meterProgress);
+        $meterDur = getMeterDur($tgtMeter); ##        print(`getMeterDur $meterDur);
+        if $meterDur <= $meterProgress then (
+            $extraMeters = int(ceil($meterProgress/$meterDur) - 1); ## print(`extraMeters $extraMeters);
+            $meterProgress = $meterProgress % $meterDur; ##  print(`meterProgressReset $meterProgress);
+            $meterSeq _= $meterDur;
+            $symDuration += $meterDur ;
+            $formattedMeter  = formatMeter($tgtMeter);
+            $formattedTempo  = [$pulse $bpm $tempoOffset $interp];
+            $measureTempi _= $formattedTempo; 
+
+            if length($measureTempi) > 1 then $measureTempi = [$measureTempi];
+            $msInfo _= [$formattedMeter $measureTempi ];
+            if $extraMeters > 0 then (
+                for $m in 1...$extraMeters do (
+                    $meterIndex += 1;
+                    $tgtMeter = $meters::$meterIndex; ## print(`extraMeters $m $tgtMeter);
+                    $meterDur = getMeterDur($tgtMeter);
+                    $meterSeq _= $meterDur;
+                    $symDuration += $meterDur;
+                    $formattedMeter  = formatMeter($tgtMeter);
+                    $msInfo _= $formattedMeter
+                )
+            );
+            $meterIndex += 1;
+            $measureTempi = null
+        )
+        else (
+            $formattedTempo  = [$pulse $bpm $tempoOffset $interp];## print(`extraTempi $formattedTempo);
+            $measureTempi _= $formattedTempo
+        )
+    )
+);  
+    if $meterIndex <= length($meters) then (
+        $unmarkedMeters  = $meters.slice($meterIndex-1)::2; ## print(`unmarkedMeters $unmarkedMeters );
+        for $umkMt $umkInd in $unmarkedMeters with @unwrap 1 do (
+            $tgtMeter = $meters::$meterIndex; ## print(`unmarkedMeter $umkMt );
+            $meterDur = getMeterDur($umkMt);
+            $tempoDuration += $meterDur;
+            $symDuration += $meterDur; ## print(`symDuration $symDuration);
+            $formattedMeter  = formatMeter($umkMt);
+            $msInfo _= [$formattedMeter]
+    )
+);
+$absDuration += $tempoDuration/($tempoSeq:-1) ## for $ms $ind in $msInfo do print(`measure $ind $ms );
+
+$meterCount = length($meters);
+$tempoChanges = length($tempi);
+$msDuration = float($absDuration*60000);
+$meterSet = sort(thin($meterSeq));
+$meterContour = for $meter in $meterSeq collect flat(findaddrs($meterSet, $meter));
+$tempoSet = sort(thin($tempoSeq));
+$tempoContour = for $tempo in $tempoSeq collect flat(findaddrs($tempoSet, $tempo));
+
+$meterInfo = [`meters [$meters]][`meter_contour [$meterContour]][`meter_set [$meterSet]][`sym_duration [$symDuration]][`meter_count $meterCount];
+$tempoInfo = [`tempi [$tempi]][`tempo_contour [$tempoContour]][`tempo_set [$tempoSet]][`abs_duration $msDuration][`tempo_changes $tempoChanges];
+$error ||| [`measures [$msInfo]] $meterInfo $tempoInfo
+))

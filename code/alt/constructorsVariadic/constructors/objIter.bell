@@ -1,0 +1,32 @@
+iterEntry = ($tgt, $vals, $addrs -> (
+    print("tgt " $tgt);
+    
+    for $addrList $listIndex in $addrs with @unwrap 1 do (
+        $indLists = 1;
+        for $addrEl $elIndex in $addrList do (
+            if contains($addrEl) != 2 then (
+            print(`elIndex flat($elIndex));
+            print(`addrSearchInds $indLists);
+            print(`keySearch flat($addrEl));
+            print(`indSearchResult findaddrs($tgt:($indLists), flat($addrEl)):(1 2));  
+                $keyIndex = $addrEl;
+               $indLists _= findaddrs($tgt:($indLists), flat($addrEl)):(1 2) 
+            )
+            else (
+                $keyIndex = 0;
+                $indLists _= $addrEl
+    );
+    $keyIndices _= $keyIndex;
+    $inds _= [$indLists]
+);
+    print(`keyIndices $keyIndices);
+    print(`inds $inds);
+    for $val $valInd in $vals do (
+        print(`newValue $val);
+        print(`addr $inds::$valInd);
+        print(`originalValue $tgt:($inds::$valInd));
+        if length($val.flat(1)) then (
+            if $keyIndices:($valInd -1) then $tgt:($inds::$valInd) = [$val] else $tgt .= subs($inds::$valInd)
+    );
+    print(`newTgt $tgt)
+))

@@ -1,0 +1,20 @@
+(<...>, $durations, $ties  -> (
+$error = 0;
+$errorLocation = "for Rhythms constructor with arguments " $args(1...$argcount);
+if !$argcount then $error = "insufficient args" $errorLocation
+else $durations = $args(1);
+$vIndex = 0;
+$total = 0;
+$velocitiesIn = $args(2);
+for $d in flat($durations) do (
+    $total += abs($d);
+    if $d > 0 then (
+        if $velocitiesIn:($vIndex+1) then $vIndex += 1;
+        $velocities _= $velocitiesIn:$vIndex ||| 100
+    )
+    else $velocities _= []
+);
+
+if $error then `ERROR $errorLocation
+else [`durations [$durations]] [`velocities [$velocities]] [`total $total] [`elements length(flat($durations))]
+))

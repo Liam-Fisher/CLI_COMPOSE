@@ -1,0 +1,19 @@
+setcell = ( $addrs, $dims, $counts = 0 0, $depth = 3 -> ( 
+    $depth -= 1; 
+    if $depth == 0 then (
+    $key = $addrs:-1;
+    if $key then $newSlot = [$key ActiveSlotGroup.$key] 
+    else $newSlot =  ActiveSlotGroup;
+    $ind =  findaddrs(ActiveSlotMatrix:$counts, $key):(1 1);
+    if $ind then ActiveSlotMatrix .= subs($counts $ind, $newSlot)
+    else ActiveSlotMatrix .= insert($counts 1, $newSlot)
+    ) 
+    else (
+        if $addrs:$depth then $iter = $addrs:$depth else $iter = 1...($dims):$depth; 
+        for $addr in $iter do ( 
+            $counts .= subs($depth, $addr); 
+            apply( SlotGroup.'set', [$addrs] [$dims] [$counts] [$depth] ) 
+            ) 
+        ) 
+    ) 
+);

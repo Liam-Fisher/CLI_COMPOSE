@@ -1,0 +1,37 @@
+$sortChords = ($chord -> wrap(rev(sort(flat($chord)))));
+$lines = $x3 ||| [pitch(1200 2400)];
+$lineCount = length($lines);
+$chords = map(trans($lines), $sortChords);
+$lines = trans($chords);
+
+if $x1 == `clear then (
+    $o1 = `cleared `lines ;
+    $lines = $lines:1
+)
+else if $x1 == `add then ( 
+    $o1 = `added `line ;
+    $lines = insert($lines, 1, wrap($x2)) 
+)
+else if $x1 == `change then (
+    $o1 = `edited `line ;
+    $lines = subs($lines, 1, wrap($x2))
+)
+else if ($lineCount > 1) then (
+    $subIndex = min(max(abs($x1),1),$lineCount-1)+1;
+    $o1 = `removed `line $subIndex ;
+    $lines = subs($lines, $subIndex )
+)
+else (
+    $o1 = `error `no `lines `stored 
+);
+
+if ($lineCount > 1) then (
+    $chords = trans($lines:[[2 -1]])
+) 
+else (
+    $chords = trans($lines)
+);
+
+$o2 = $lineCount-1 `lines `stored ;
+$o3 = map($chords, $sortChords);
+$lines

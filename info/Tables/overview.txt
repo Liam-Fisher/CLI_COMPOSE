@@ -1,0 +1,9 @@
+There are 12 different Tables in the Workspace database
+These can be divided into 4 categories:
+
+Maps: Tunings, Slots, ?Operators?
+Sequences: Rhythms, Pitches, Extras
+Structures: Measures, Forms, ?Events?
+Notation: Motives, Scores, Performers
+
+/// /// /// Maps

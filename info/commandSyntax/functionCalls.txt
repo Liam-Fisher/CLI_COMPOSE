@@ -1,0 +1,2 @@
+Main function syntax is as follows:
+<API_ID>([...<lllls>]  @cmd <API_Method> @<namedParams>)

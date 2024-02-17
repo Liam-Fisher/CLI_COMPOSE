@@ -1,0 +1,26 @@
+SQL = ($cmd = `i , $t = `PT , $c , $v , $r  -> (
+    $msg = null;
+    if $cmd == `get then $msg = `SELECT `FROM $t `WHERE $w
+    else if $cmd == `set then $msg = UPDATE(@vals $vals @cols $c @table $t @where $reduce)
+    else if $cmd == `del then $msg = `DELETE `FROM $t `WHERE $w
+    else $msg = `msg $cmd $vals;
+    $msg
+));
+
+SELECT = ($cols, $table, $where -> (
+    if $cols then $msg _= SEP($cols) 
+    else $msg = `* ;
+    $msg _= `FROM $table ;
+    if $where then $msg _= `WHERE $where;
+    `SELECT $msg 
+));
+
+UPDATE = ( $cols, $vals, $table, $where -> (
+    $msg = $table `SET ;
+    $eqs = trans( [$cols] [`= :* length($cols) ] [$vals] );
+    $msg _= $SEP( $eqs, `, ).flat(1);
+    if $where then $msg _= `WHERE $w;
+    `UPDATE $msg
+));
+
+SEP =  ($a -> for $v $i in $a collect $v if length($a)-$i then `, )

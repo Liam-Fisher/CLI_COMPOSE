@@ -1,0 +1,15 @@
+$accidentals = `bb `b `n `# `x ; 
+$getAcc = ( $x -^ $accidentals -> (
+    flat(findaddrs($accidentals, $x)) - 3 )
+); 
+$setAcc = ( $x -^ $accidentals -> (
+    $accidentals:($x + 3) )
+); 
+$print(`keySigIn $x1);
+$alterations = map($x1, $getAcc);
+$print(`keySigOut $alterations);
+$print(`alterationsIn $x2);
+$keySig = map($x2, $setAcc) ||| $x1 ;
+$print(`alterationsOut $alterations);
+$o1 = $alterations;
+$keySig

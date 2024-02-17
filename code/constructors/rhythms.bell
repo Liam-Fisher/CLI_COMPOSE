@@ -1,0 +1,17 @@
+($durations, $velocities  -> (
+if !$durations then $error = "no duration arg";
+$vIndex = 0;
+$total = 0;
+$velocitiesIn = $velocities;
+for $d in flat($durations) do (
+    $total += abs($d);
+    if $d > 0 then (
+        if $velocitiesOut:($vIndex+1) then $vIndex += 1;
+        $velocitiesOut _= $velocitiesIn:$vIndex ||| 100
+    )
+    else $velocitiesOut _= []
+);
+
+if $error then `ERROR $errorLocation
+else [`durations [$durations]] [`velocities [$velocitiesOut]] [`total $total] [`elements length(flat($durations))]
+))

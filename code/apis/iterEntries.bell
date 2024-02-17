@@ -1,0 +1,22 @@
+iterEntry = ($tgt, $vals, $addrs, $keys -> (
+    $entry = $tgt.flat(1);
+    if length($vals) > length($addrs) then print("more values than addresses");
+    for $addr $index in $addrs with @unwrap 1 do (
+        if length($keys::$index, 1) then (
+            $keyIndex = findaddrs($entry:($addr), $keys::$index ):(1 2);
+            if $keyIndex then (
+                if length(flat($vals:$index, 1)) then $entry:($addr $keyIndex) = [$keys::$index $vals::$index]
+                else $entry .= subs($addr $keyIndex)
+            )
+            else (
+                if length(flat($vals:$index, 1)) then $entry .= insert($addr -1, [$keys::$index $vals::$index])
+                else print("could not find element at " $addr $keys:$index " to delete")
+            )
+        )
+        else (
+            if length(flat($vals:$index, 1)) then $entry .= insert($addr, $vals:$index)
+            else $entry .= subs($addr)
+        )
+    );
+    [$entry]
+))

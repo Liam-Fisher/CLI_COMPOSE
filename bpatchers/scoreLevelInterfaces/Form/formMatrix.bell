@@ -1,0 +1,15 @@
+
+$motiveInfo = $x1;
+$motiveID = $x2;
+$coord = $x3;
+$dims = $x4;
+$colDiff = $x2 - length($padded);
+
+if $colDiff > 0 then (
+    $newContour  = $padded ( $padded:-1 :* $colDiff)
+)
+else if $colDiff < 0 then (
+    $newContour  = slice($padded, $colDiff)
+)
+else $newContour = $padded;
+print(`newContour $newContour);

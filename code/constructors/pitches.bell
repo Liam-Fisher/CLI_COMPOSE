@@ -1,0 +1,25 @@
+($chords, $ties, $root -> (
+if !$chords then $error = "no arg for chords"
+else $chords .= flat(1);
+
+$notes = sort(flat($chords));
+$voices = minmax($chords.map($c -> length(flat($c)))):3;
+$tiesOut = $ties.flat(1) ||| (cents($chords)*0);
+
+if !$root then $rootNote = $notes:1
+else if contains($root) == 32 then $rootNote = $chords:(flat($root))
+else $error = "root arg must be llll";
+
+for $chord in $chords with @unwrap 1 do (
+$pitchAddr = for $pitch in $chord collect flat(findaddrs($notes, $pitch));
+$contour _= [$pitchAddr]
+); 
+
+$scale = sort(thin($notes%C1));
+$slRootIndex = flat(findaddrs($scale, $rootNote%C1)) ||| 0;
+if !$slRootIndex then $scale _= $rootNote%C1; 
+$scale .= rot($slRootIndex-1);
+$info = [`scale [$scale]] [`contour [$contour]][`voices $voices][`elements length($chords)];
+
+$error ||| [`chords [$chords]] [`ties [$tiesOut]][`root [$root]] $info
+))

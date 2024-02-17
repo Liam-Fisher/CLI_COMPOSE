@@ -1,0 +1,12 @@
+columns 
+[name s] the motive name
+[content l] //  the score in gathered syntax 
+[pitches_id i] //  the score in gathered syntax
+[rhythms_id i] // id of row in Rhythms
+[extras_id i]// id of row in Extras, the 
+[performer_id i]
+
+
+// 
+
+

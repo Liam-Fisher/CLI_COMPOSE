@@ -1,0 +1,54 @@
+Columns
+[durations l]
+[velocities l]
+[total r]  
+
+[elements i]
+[name s] 
+
+// optional 
+[scale l]
+[rests l]
+[contour l]
+
+
+// an llll of non-zero rational numbers for each element, optionally including rhythmic tree levels   
+required: (rat|rat[]|rat[][]|rat[][][]...)[]
+
+// an llll of velocities [1 - 127], each element can be a list or an int.
+// if optional is NOT provided, all velocities are assumed to be nil for rest elements and 100 otherwise
+optional: (int|int[])[]
+// An int will set all notes in a chord to that velocity, a list will set as many as it has, and set any 
+// extra notes to the last velocity provided, or ignore any extra velocities.
+
+// a depth-2 llll of bools, determining if a note of a chord is tied to the next note at that voice
+ties: (int|int[])[]
+// a single value is spread across all notes in a chord 
+// nil values are set to 0, unless the pitch value is already also nil
+
+// scale is an llll of prime-count vectors
+scale: int[][] 
+// a unique set of values, where each value is a n-vector of signed integers, where the product of 
+// the nth prime to the power of the nth entry for all primes from 1 to n is a unique rational number present 
+// in the durations list. 
+
+// contour is an llll of positive integers pairs
+contour: [int,int][]
+// the first integer refers to the index of an element in scale
+// the second refers to how many times it is repeated
+
+// a depth-2 llll of bools, determining if a note of a chord is tied to the next note at that voice
+ties: (int|int[])[]
+// a single value is spread across all notes in a chord 
+// nil values are set to 0, unless the pitch value is already also nil
+
+// an llll of bools (technically integers equal to 0 or 1) that determines which elements are rests
+rests: bool[];
+
+// NOTE there is a bijective (?) map between the set of all duration sequences (ignoring rhythmic tree levels)
+// and all unique combinations of (scale, contour, and rests).
+// this means that when specifying a set of durations, all other parameters are generated automatically.
+
+// total is the sum of the absolute value of each duration
+total: rat 
+// though a strictly analytic parameter, it is useful for displaying motives, generating score and querying

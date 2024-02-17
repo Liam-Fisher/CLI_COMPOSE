@@ -1,0 +1,24 @@
+(<...>, $breakpoints, $bf = 0 0 1 1 0 0 1 0  -> (
+## first arg is a list of breakpoints, has depth 2, 3 or 4 (depending on arg 2) 
+## second arg is a list of 8 boolean flags: 1: durationInMs, 2: hasVelocity?,  
+## 3-5: hasMultiple? ( Rows, Cols, Voices ) 6-8: copyUnassigned? ( Rows, Cols, Voices )
+
+if !$breakpoints then (
+    if !$argcount then $error = "insufficient args"
+    else $breakpoints = $args(1)
+);
+
+if $args(2) then $codes = $args(2)
+else $codes = $bf ;
+
+if contains($codes) != 2 then $error = "codes must be an int or list of bools "
+else (
+    if length($codes) > 1 then (
+        $bitfield = 0;
+        for $d $di in $dims do $bitfield += $di*pow(2, $i-1)
+        )
+        else $bitfield = $codes
+);
+$newEntry = [`breakpoints [$breakpoints]][`codes $bitfield][`elements length($breakpoints)];
+$error |||  [`breakpoints [$breakpoints]][`codes $bitfield][`elements length($breakpoints)]
+))

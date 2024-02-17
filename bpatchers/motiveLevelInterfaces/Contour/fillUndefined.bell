@@ -1,0 +1,25 @@
+$pad = ( $ctEl -> (
+    $ctCoords = flat($ctEl);
+    $rowDiff = 2 + length(ActiveTuning.'ranges'.'generators') - length($ctCoords);
+    if $rowDiff<0 then slice($ctCoords, $rowDiff):1 else wrap($ctCoords (1 :* $rowDiff))
+));
+$clip = ( $ctEl ->
+for $x $ind in $ctEl collect (
+if $ind == 1 then $max = ActiveTuning.'ranges'.'steps'
+else if $ind == 2 then $max =  ActiveTuning.'ranges'.'period'
+else $max = ActiveTuning.'ranges'.'generators':($ind-2);
+$ctEl.max(1).min($max) )
+);
+$padded = map($x1, $pad);
+$colDiff = $x2 - length($padded);
+
+if $colDiff > 0 then (
+    $newContour  = $padded ( $padded:-1 :* $colDiff)
+)
+else if $colDiff < 0 then (
+    $newContour  = slice($padded, $colDiff)
+)
+else $newContour = $padded;
+print(`newContour $newContour);
+
+for $x in $newContour with @unwrap 1 collect [map($x, $clip)] 

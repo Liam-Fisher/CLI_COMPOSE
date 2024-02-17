@@ -1,0 +1,7 @@
+for $x in $x1 with @unwrap 1 collect (
+    $inds = slice($x, 1); 
+    $gens = $inds::2;
+    $deg = (ActiveScale:($inds::1)) + 1;
+    $cents = ActiveTuning.'cents':($gens $deg); 
+    pitch($cents)
+)

@@ -1,0 +1,51 @@
+Slots is a sub table of performers, containing the slotid header llll
+
+
+Columns
+[name s]
+[automated i]
+[linkages l]
+[slot1 l]
+[slot2 l]
+...
+[slot24 l]
+
+// automated indicates whether the slotinfo is designed for a human performer
+// this determines which default slots are included in the slotinfo 
+automated: bool 
+
+// dynamics, articulations, notehead,annotation and lyrics are already linked (if automated if false)
+// in theory, an automated performanceStation does not benefit from any linkages, however, you may wish
+// to assign them for display purposes. 
+linkages: [int 'annotation'|'lyrics'|'dynamics'|'articulations'|'dlcolor'|
+'notecolor'|'notesize'|'noteheadfont'|'noteheadadjust'|'notehead']
+
+only 24 slots are availible to be assigned by the values in a Slotinfo Tables
+
+slots 25-29 are assigned to one of two lllls, based on the rows "automated" value
+(these are the global variables defaultSlotInfoA and defaultSlotInfoB in the enums file)
+
+defaultSlotInfoA are the markings standard to music notation 
+(dynamics, articulations, notehead,annotation and lyrics)
+
+DefaultSlotInfoB:
+/// /// these slots are fairly standard dsp fair 
+the filter slot is a dynfilter that filters the output values for an associated dsp object groups output 
+the pan slot pans the outputs of an associated dsp object groups outputs before recording or outputing sound.
+the file slot is a filelist where each indexed file should be loaded asynchronously into the 
+objects associated with that midichannel and those indices.
+
+/// /// these slots are more complex, and represent an upper limit for the kind of things you should try and do
+with slot outputs.
+
+the parameters slot sends a message to a named max object, it is independent from its associated midichannel.
+Use this over eval for time-sensitive but simple operations.  
+the format is [<targetObject> <...message args>][] where targetObject is an object's scripting name. 
+
+the eval slot contains a text string that is set as the expression for a bell.eval object, 
+the bach.eval object is then triggered with the slots midichannel, which may or may not 
+be used. This is intended for the purpose of setting a global variable whose bach.value object 
+will auto-output its new value and trigger some kind of process. 
+
+
+slot 30 is always the "GlobalTime" slot of type int (see info\misc\globalTimeSlot);

@@ -1,0 +1,65 @@
+iterEntry = ($code, $prevEntry, $dim, $val, $rows, $cols, $keys -> (
+    $entry = $prevEntry.flat(1);
+    print("code " $code); 
+    print("prevEntry " $prevEntry);
+    print("dim " $dim);
+    print("val " $val);
+    print("rows " $rows);
+    print("cols " $cols);
+    print("key " $keys); 
+    for $row in $rows do (
+        $rowCount = length($entry);
+        print("row " $row " of " $rowCount); 
+        if $row > $rowCount then (
+            $rowPad = [] :* ($row - ($code%2+$rowCount));
+                print("rowPad " $rowPad); 
+            $entry _= $rowPad
+        );
+        print("paddedEntry " $entry); 
+        if $dim > 1 then (
+            for $col in $cols do (
+                $colCount = length($entry:($row));
+                if $col > $colCount then $entry .= insert($row -1, ([] :* ($col - $colCount)));
+                if $dim > 2 then (
+                for $key in $keys do (
+                    $keyval = [$key $val];
+                    $ind = findaddrs($entry:($row $col), $key ):(1 2);
+                        if $ind then (
+                            if $code == 2 then (
+                                 print("setting element at " $row $col $key );
+                                 $entry:($row $col $ind) = $keyval
+                            )
+                            else if $code == 1 then (
+                                print("cannot add,element already exists at key" $row $col $key )
+                            )
+                            else (
+                                print("deleting element at " $row $col $key );
+                                $entry .= subs($row $col $ind)
+                            )
+                        )
+                        else (
+                            if $code == 2 then print("cannot find element to set at " $row $key )
+                            else if $code == 1 then (
+                                print("adding element at " $row $key );
+                                $entry .= insert($row $col  -1, $keyval)
+                            )
+                            else print("cannot find element at " $row $col $key " to delete")
+                        )
+                )
+            )
+            else (
+                    if $code == 1 then $entry .= insert($row $col, $val)
+                    else if $code == 2 then $entry:($row $col) = $val 
+                    else $entry .= subs($row)
+            )
+        )
+        )
+        else (
+                if $code == 1 then $entry .= insert($row, $val)
+                else if $code == 2 then $entry:($row) = $val 
+                else $entry .= subs($row);
+                print("editedEntry " $entry)
+            )
+        );
+    $entry
+))

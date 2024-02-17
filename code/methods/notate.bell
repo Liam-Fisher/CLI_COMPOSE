@@ -1,0 +1,169 @@
+
+NotateMT = ( <...>, $stepsPerPeriod = 12, $mt = ActiveMotive -> (
+$ind = 0;
+$totalDuration = 0;
+$scaleOut = sort(thin($mt.'SL' % ($td * $stepsPerPeriod)));
+for $dur $pos in $mt.'RT' do (
+    if $ind <= length($mt.'CT') then $rtOut = $rtIn 
+    else $rtOut = -1*abs($rtIn);  
+    if $rtOut > 0 then ( 
+        $ind += 1;
+        $voicesIn = $voicingIn::$ind ||| 1;
+        $tie = null; 
+        $voicesOut = null;
+        $root = $mt.'CT':$ind - 1; 
+        $velsIn = $mt.'VM'::($ind) ||| 100;
+        for $voice $vaddr in $voicesIn do (
+            $vel = $velsIn:($vaddr)|||100;
+            if !$prevVoices then $prevVoices = nil; 
+    print(`prevVoices $prevVoices);
+    print(`voice $voice `vel $vel `vaddr $vaddr);
+            if $voice != 0 then (
+                $voicesOut _= ( $voice + $root );
+                $velsOut _= $vel;
+                $tie _= 0
+            )
+            else ( 
+            if $mt.'RT':($pos-1) > 0 && $prevVoices:$vaddr then (
+                    $voicesOut _= $prevVoices:$vaddr;
+                    $velsOut _= $vel;
+                    $tie _= 1
+                )
+                else (
+                    $velsOut _= [];
+                    $tie _= 0
+                )
+            )
+        ); 
+    $prevVoices = sort(thin($voicesOut));
+    $contourOut _= $root;
+    $voicingOut _= [$prevVoices - $root];
+    $chords _= [ DegToCt($prevVoices, $scaleOut, $mt.'TR') ];
+    $velocitiesOut _= $velsOut;
+    $ties _= [ $tie]
+    )
+    else (
+        $chords _= [];
+        $velocities _= [];
+        $ties _= []
+    );
+    $vLen = length($voicesOut);
+    if $mt.'SM':$pos then (
+        $sgOut = $mt.'SM'::$pos;
+        if length($sgOut) < $vLen then (
+            $sPad = [] :* ( $vLen-length($sgOut) ) ;
+            $slotsOut _= [ $sgOut $sPad ]
+        )
+        else (
+            $slotsOut _= $sgOut.slice($vLen):1
+        )
+    )
+    else (
+        $slotsOut _= [ [] :* $vLen ]
+    );
+    $rhythmOut _= $rtOut;
+    $totalDuration += abs($rtOut)
+);
+$ties = rot($ties, 1);
+$totalDuration [$chords] [$rhythmOut] [$ties] [ $velocitiesOut ] [$slotsOut]
+));
+GetMsDur = ($ms -> (
+    if depth($ms) == 2 then ($ms::1.reduce(($x -> $x + $y))) / $ms:-1
+    else ($ms:1)/($ms:2)
+));
+
+FormatMeasures = ( $sr = ActiveScore -> (
+    $msIndex = 1;
+    $totalDuration = 0;
+    $msProgress = 0;
+    $prevPulse = 1/4;
+    $msIn =  $sr.'MS';
+    $tpIn =  $sr.'TP';
+    for $tp $pos in $tpIn with @unwrap 1 do (
+    $bpm = $tp:1;
+    $pulse = $tp:2 ||| $prevPulse ;
+    $dur = $tp:3 ||| [1] ;
+    $interp = $tp:4 ||| 0 ;
+    if  $dur.depth() == 2 then (
+        for $msCount in 1...$dur:(1 1) do (
+            $tgtMs = $msIn::$msIndex;
+            $tpOffset = $dur:(1 2) ||| 0;
+            $msProgress += $tpOffset;
+            $totalDuration += GetMsDur($tgtMs);
+            $msInfo _= [[$tgtMs][$pulse $bpm $tpOffset $interp]];
+            $msIndex += 1 
+        );
+        $msTempi = null
+    )
+    else (
+        $tgtMs = $msIn::$msIndex;
+        $msProgress += $dur;
+        $msDur = GetMsDur($tgtMs);
+        if $msDur <= $msProgress then (
+            $extraMs = int(floor($msProgress/$msDur));
+            $msProgress = $msProgress % $msDur;
+            $msTempi _= [ $pulse $bpm $tpOffset $interp ]; 
+            if length($msTempi) > 1 then $msTempi = [$msTempi];
+            $msInfo _= [[$tgtMs] $msTempi ];
+            if $extraMs > 0 then (
+                print(`extra $extraMs);
+                for $m in 1...$extraMs do (
+                    $msIndex += 1;
+                    $tgtMs = $msIn::$msIndex;
+                    $totalDuration += GetMsDur($tgtMs);
+                    $msInfo _= [[$tgtMs]]
+                )
+            );
+            $msIndex += 1;
+            $msTempi = null
+        )
+        else (
+            $msTempi _= [$pulse $bpm $msProgress $interp]
+        )
+    )
+    )
+    $totalDuration [$msInfo]
+));
+
+FormatMotives = ( $sr = ActiveScore -> (
+    $fm = $sr.'FM';
+    for $voice $vInd in $fm with @unwrap 1 do (
+        for $mt $mtInd in $voice do (
+            $srchords = null;
+            $srdurs = null;
+            $srties = null;
+            $srvels = null;
+            $srslots = null;
+            if contains($mt) != 16 then (
+                if contains($mt:1) != 2 then (
+                    $restCount = 1;
+                    print('improper motive format' $mt $mtInd ' at voice ' $vInd)
+                )
+                else (
+                    $restCount = $mt:1
+                );
+                $restDur =  $mt:2 ||| 1;
+                $totalDuration += $restCount*$restDur;
+                $srchords _=  [] :*  $restCount;
+                $srdurs _=  (-$restDur) :*  $restCount;
+                $srties _=  0 :*  $restCount;
+                $srvels _=  0 :*  $restCount;
+                $srslots _= [[]] :*  $restCount
+                )
+            else (
+                SF( `g , @tgt $mt @ctx `MT );
+                $tgtMt = NotateMT();
+                $totalDuration += $tgtMt:1;
+                $srchords _= $tgtMt::2;
+                $srdurs _= $tgtMt::3;
+                $srties _= $tgtMt::4;
+                $srvels _= $tgtMt::5;
+                $srslots _= $tgtMt::6
+            )
+        );
+        $voiceDurations _= $totalDuration;
+        $srVoices _= [[$srchords] [$srdurs] [$srties] [$srvels] [$srslots]]  
+    );
+    $srSeparate = $voiceDurations flat(trans($srVoices), 1) 
+))
+

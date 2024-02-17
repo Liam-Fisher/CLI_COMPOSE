@@ -1,0 +1,14 @@
+(<...>, $table -> (
+$error = 0;
+$errorLocation = "generic constructor with arguments " $arg(1...$argcount);
+
+if !$table then $error = "no table argument " $errorLocation
+else $colDefs = (trans(defaults.$table)::1):[[2 -1]];
+
+if !$colDefs then $error = "tableID " $table "not defined ";
+print(`Columns $colDefs);
+print(`argList $args(1...$argcount));
+$vals = for $colDef $colIndex in $colDefs collect [$colDef ($args($colIndex) ||| defaults.$table.$colDef)]; 
+print("vals " $vals);
+$error ||| $vals 
+))

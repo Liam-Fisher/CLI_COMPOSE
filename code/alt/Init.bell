@@ -1,0 +1,79 @@
+ActiveContext = `SL ;
+ActiveIDs = [`CT [] ][`FM [] ][`MK [] ][`MS [] ][`MT [] ][`PF [] ]
+[`RT [] ][`SG [] ][`SL [] ][`SM [] ][`SR [] ][`VM [] ][`VC [] ];
+ActiveKeys = `maj ; 
+ActiveRhythm = 1/4 -1/4 1/4 -1/4;
+ActiveScale = 0 1 2 3 4 5 6 7 8 9 10 11;
+ActiveContour = 0 1;
+ActiveVoicing = [1 3 5] [1 3 0];
+ActiveSlotGroup = [1 0] [2 0];
+ActiveSlotMatrix = [ [[1 0]] [[2 0]] ] [ [[3 0]] [[4 0]] ]; 
+ActiveMotive = [
+    [ `SL (ActiveScale) ]
+    [ `RT (ActiveRhythm) ]
+    [ `CT (ActiveContour) ]
+    [ `VC (ActiveVoicing) ]
+    [ `SM (ActiveSlotMatrix) ]
+];
+ActiveMeasure = [4 4];
+ActiveTempo = [60];
+ActiveForm = [[]];
+ActiveKeySig = `n `n `n `n `n `n `n ; 
+ActivePerformer = 
+[ `header 
+    [ `slotinfo 
+    [ 1  [ `name `slot1 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 2  [ `name `slot2 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 3  [ `name `slot3 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 4  [ `name `slot4 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 5  [ `name `slot5 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 6  [ `name `slot6 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 7  [ `name `slot7 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 8  [ `name `slot8 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 9  [ `name `slot9 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 10  [ `name `slot10 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 11  [ `name `slot11 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 12  [ `name `slot12 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 13  [ `name `slot13 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 14  [ `name `slot14 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 15  [ `name `slot15 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 16  [ `name `slot16 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 17  [ `name `slot17 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 18  [ `name `slot18 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 19  [ `name `slot19 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 20  [ `name `slot20 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 21  [ `name `slot21 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 22  [ `name `slot22 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 23  [ `name `slot23 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 24  [ `name `slot24 ] [ `type `int ] [ `key 0 ] [ `range 0. 127. ] ]
+    [ 25 [ `name `lyrics ] [ `type `text ] [ `key `l ] [ `background 1 ] ] 
+    [ 26 [ `name `annotations ] [ `type `text ] [ `key `t ] ] 
+    [ 27 [ `name `notehead ] [ `type `notehead ] [ `key `h ] ] 
+    [ 28 [ `name `articulations ] [ `type `articulations ] [ `key `a ] ] 
+    [ 29 [ `name `dynamics ] [ `type `dynamics ] [ `key `d ] ] 
+    [ 30 [ `name `globaltime ] [ `type `int ] [ `key `g ] [ `range 0. 2147483648. ] 
+    [ `singleslotfortiednotes 0 ] ] ] 
+    [ `voicenames `RH `LH ] 
+    [ `midichannels 1 2 ] 
+    ]  
+[ `constraints 
+    [ `pitchSpace 
+        [ `cents [ 2100 6900] [5200 10800] ] 
+        [ `tonedivision 2 ] 
+        [ `clefs [ `G15va `G8va `G `F ] [ `G `F `F8vb `F15mb ] ] 
+        [ `maxParts 3 ] ] 
+    [ `timeSpace 
+        [ `min 20. ] 
+        [ `max 20000. ] 
+        [ `ready 60000. ] 
+        [ `exit 600000. ] ] 
+    [ `polySpace 
+        [ `chordWidth 16 ] 
+        [ `chordSize 5 ] 
+        [ `maxParts 4 ] ] 
+    ] 
+[ `info 
+    [ `id `default ] 
+    [ `instrument `Piano ] 
+    [ `description 'example piano profile' ] 
+]

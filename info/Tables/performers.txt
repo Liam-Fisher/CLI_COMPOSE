@@ -1,0 +1,9 @@
+Columns
+[slotinfo l] 
+[automated i]
+
+// slotinfo is the slot info table giv
+
+// automated indicates whether the slotinfo is designed for a human performer
+// this determines which default slots are included in the slotinfo 
+automated: bool 

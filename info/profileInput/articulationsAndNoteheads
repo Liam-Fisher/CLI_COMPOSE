@@ -1,0 +1,34 @@
+The possible fields to be assigned to a newly defined articulation are the following ones:
+– fullname: a symbol defining the articulation full name (e.g. "myfermata")
+– shortname: a symbol defining the articulation short name (e.g. "myf")
+– alias: up to 5 other names which will be mapped on the articulation when found in articulation slots
+– font: a symbol containing the font name, or "default" (in order to use the defined "articulationsfont")
+– basept: the basic font size (corresponding to a no-vzoom situation). 
+– position: one of the following symbols: "abovenote", "belownote", "noteside", "stemsidenearnotehead", "stemsidenearflag", "manual", 
+determining the position of the articulation
+
+The following specifications determine the characters used:
+– mainchar: symbol or unicode value determining the main articulation character (above notes)
+– flippedchar: symbol or unicode value determining the flipped articulation character (below notes)
+– extchar: symbol or unicode value of the articulation extension, if any (e.g.: the tilde in a trill line)
+
+The following specifications will refer to unzoomed situations, and will be scaled according to the zoom:
+– mainxshift, mainyshift: x and y shift of positioning for the main character (positive y shift moves up)
+– flippedxshift, flippedyshift: x and y shift of positioning for the flipped character
+– mainheight, flippedheight: height of the main and flipped characters
+– mainycenter, flippedycenter: position of the vertical center of the articulation for main and flipped char
+– outsidestaffynudge: additional y shift to push articulation farther from staff
+– extyshift: horizontal offset for the beginning of the articulation extensions
+
+Finally, one can assign an option specification, possibly followed by a list of symbols, to set some flags. 
+Symbols must be among the following ones:
+· avoidlines,: avoid staff lines
+· outsidestaff,: always place outside staff
+· centerovernote,: center over the notehead
+· centeroverstem,: center over the stem
+· spanties,: articulation extension spans sequences of tied notes
+· copywhencloned,: copy articulation while copying notes
+· copywhenclonedtosamechord,: ...also when copying notes into the same chord
+· copywhensplit,: copy articulation to all notes when notes are split, or retranscribed as tied sequences
+· shiftwithbeams,: shift vertically according to beams
+ avoid lines,  outside staff,  center over note,  center over stem,  span ties,  copy when cloned,  copy when cloned to same chord,  copy when split,  shift with beams

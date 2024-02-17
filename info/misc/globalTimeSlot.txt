@@ -1,0 +1,32 @@
+slot 30 is always the "GlobalTime" int slot, which refers to the time (in milliseconds) 
+that a note or rest "should" occur, counting from the start of the piece. 
+This is set for the first element of the first voice every measure. 
+It is assigned to automatically in the score by the "Measures" llll.
+It can also be set with an additional argument to a "Measure" llll, or ignored for that measure,
+by setting the final argument is nil.
+
+The purpose of this slot is two-fold:
+
+When only assigned automatically, it serves to adjust the play speed of a performers score, 
+based on the local machine's current cpu time, and the agreed upon "PieceStartTime" variable,
+which is broadcast to all performers upon joining. This is done by sending a smoothed signal 
+of scaling to a "setclock" max object in "mult" mode, based on the ratio between the change in
+globalTime and the change in localCPU time.
+
+When assigned to manually (via an extra argument to a measure), it performs the same tempo smoothing,
+but with the added purpose of aligning measures across multiple performanceStations. This could also be done
+by precisely calculating tempo changes, and is primarily provided for convience.
+
+The difference between the time calculated from measures and an assigned GlobalTime value is added to the 
+global variable "GlobalTimeOffset", which is used to calculate future global times in the piece.
+
+Although the GlobalTime can be set to any value, it is best used to tweak the automatically calculated value, 
+and not as a general purpose tempo control device, since it is less efficient and less intuitive than setting
+tempi in a measure.  
+
+
+[ name globaltime ] 
+[ type int ] 
+[ range 0. 2147483648. ] 
+[ singleslotfortiednotes 0 ]
+

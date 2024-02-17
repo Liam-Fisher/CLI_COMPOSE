@@ -1,0 +1,15 @@
+
+## keep onset in ms, and duration
+$note = $x1::4; 
+$line = $note:4 $note:2;
+## ignore starttie? and flag
+if $x1:1 == `chord then (
+$notes = $note:[[5 -2]];
+for $params $addr in $notes do (
+$line _= $params.map(($n -> [$n.flat(1).subs(3).subs(-1)]))
+)
+)
+## keep rest slots if present
+else $line _= $note.'slots';
+
+$line

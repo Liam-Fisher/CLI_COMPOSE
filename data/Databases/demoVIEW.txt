@@ -1,0 +1,27 @@
+	[
+		[ Motive
+			[ Name s ]
+			[ PitchSequences l ]
+			[ Rhythms l ]
+			[ Slots l ]
+			[ Breakpoints l ]
+		]
+		[
+			[
+				[ Motive_id 1 ]
+				[ Name mainMotive ]
+				[ PitchSequences 1 ]
+				[ Rhythms 1 ]
+				[ Slots 1 ]
+				[ Breakpoints 0 ]
+			]
+			[
+				[ Motive_id 2 ]
+				[ Name dubMotive ]
+				[ PitchSequences 1 ]
+				[ Rhythms 1 ]
+				[ Slots 1 ]
+				[ Breakpoints 1 ]
+			]
+		]
+	]

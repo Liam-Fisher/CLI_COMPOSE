@@ -1,0 +1,10 @@
+TABLES = [
+    [`PT [`name 16][`chords 32][`ties 32][`td 2][`root 256][`contour 32][`scale 32][`elements 2] ]
+    [`RT [`name 16][`durations 32][`velocities 32][`total 8][elements i] ]
+    [`SL [`name 16][`slots 32][`rests 32][`HD_id 2][`key_set 32][`codes 2][elements 2] ]
+    [`BP [`name 16][`breakpoints 32][`codes 2][elements 2] ]
+    [`MS [`name 16][`measures 32]
+    [`meters 32][`meter_contour 32][`meter_set 32][`sym_duration 8][`meter_count 2]
+    [`tempi 32 ] [`tempo_contour 32 ] [`tempo_set 32 ] [`abs_duration 4 ] [`tempo_changes 3] ]
+    [`SR [`name 16][`content 32][`HD_id 2][`RT_ids 32][`PT_ids 32][`SL_ids 32][`BP_ids 32][`MS_ids 32]]
+]

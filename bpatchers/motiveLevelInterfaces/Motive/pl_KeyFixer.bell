@@ -1,0 +1,28 @@
+$majPcs = 0 2 4 5 7 9 11 ;
+$majSteps = 2 2 1 2 2 2 1 ;
+
+$cycleSort = ( $x -> (($x:-1) - 12) $x (($x:1) + 12) );
+$sortedTest = ( $x -> $x == sort( $x ) );
+$uniqueTest = ( $x -> length(thin(($x+12)%12)) == 7 );
+
+$offsets = $x1;
+$noOverlap = $uniqueTest($pitchClasses) * $sortedTest($cycleSort($pitchClasses));
+$deg = 0;
+$iterCount = 0;
+
+while $noOverlap == 0 do (
+$split = slice(rot($offsets, $deg), 2);
+$interval = $split::1;
+$prev = $interval:1;
+$next = $interval:2;
+$fixed = $next + (1 - ($next > ($prev - ($majSteps:(1 + $deg)))));
+
+$rejoined = $prev $fixed ($split::2);
+$offsets = rot($rejoined, -1*$deg);
+$deg = (($deg+1) % 7);
+$iterCount += 1;
+$pitchClasses = $offsets + $majPcs;
+$noOverlap = $uniqueTest($pitchClasses) * $sortedTest($cycleSort($pitchClasses)) + ($iterCount>700)
+); 
+$o1 = $iterCount;
+$offsets

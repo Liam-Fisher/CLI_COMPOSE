@@ -1,0 +1,60 @@
+Describes a tuning,
+has columns:
+name: symbol 
+rootCents: float 
+rootHZ: float
+rootNote: symbol (note name)
+rank: integer
+JIsubgroup: llll
+GeneratorCents: llll
+GeneratorSteps: llll
+mapping: llll
+vals: llll
+tuningmap: llll
+
+
+Examples:
+
+[name 5limit12EDO]
+[RootCents 6900]
+[RootHZ 440]
+[RootNote A5]
+[rank 1]
+[edo 12]
+[GeneratorCents 100]
+[GeneratorSteps 1]
+[JIsubgroup 2 3 5]
+[Mapping [12 19 28]]
+[TuningMap [1200.000 1900.000 2800.000]]
+
+
+example scale:
+[Name major]
+[CentsOffset 300]
+[elements 7]
+[NoteNames C D E F G A B ]
+[PitchClasses 0 2 4 5 7 9 11]
+[IntervalString 2 2 1 2 2 2 1]
+
+
+[name quartercommameantone]
+[RootCents 6900]
+[RootHZ 440]
+[RootNote A5]
+[rank 2]
+[edo 0]
+[GeneratorCents 1200 696.578]
+[GeneratorSteps 12 7]
+[JIsubgroup 2 3 5]
+[mapping [1 1 0] [0 1 4]]
+[tuningmap [1200.000 1896.578 2786.314]]
+
+
+example scale:
+[name CmajorVersion1]
+[CentsOffset 310.265]
+[elements 7]
+[NoteNames C D E F G A B ]
+[PitchClasses [0 0] [-1 2] [-2 4] [1 -1] [0 1] [-1 3] [-2 5]]
+[IntervalString [-1 2] [-1 2] [3 -5] [-1 2] [-1 2] [-1 2] [3 -5]]
+

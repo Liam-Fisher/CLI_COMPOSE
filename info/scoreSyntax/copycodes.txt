@@ -1,0 +1,15 @@
+there are 10 copy codes in total, split into 5 lists (one for each component)
+the first copy code for each list is whether or not the component will be copied for an extra voice
+'copycodes'.'MS':1 means copy measures if there are more voices than sublists in MS_ids
+'copycodes'.'RT':1 means copy rhythms if there are more voices than sublists in RT_ids
+and so on...
+the second copy code for PT, BP, and SL only is whether or not an elements is copied for extra durations
+ex. if a voice has durations 1/4 1/4 1/4 and pitches [C5 G5] [C5 A5] 
+then 'copycodes'.'PT':1 will append [C5 A5] to pitches (this is the default behaviour of bach.Score
+else, durations will become rests
+the third copy code for  BP, and SL only is whether or not an elements is copied for extra voices
+ex. if a pitch in a sequence is [C5 E5 G5] and the slot is [ [[1 23] [2 24]] [[1 45][2 43]]] ]
+then [[1 45][2 43]]] will be appended 
+
+
+

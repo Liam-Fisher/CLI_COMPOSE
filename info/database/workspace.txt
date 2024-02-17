@@ -1,0 +1,27 @@
+The "workspace" format is a collection of tables representing musical materials.
+These tables are collexted in a SQLite3 database.
+The database is stored as both a text file (for viewing) and a db3 file (for access).
+    /// /// /// TABLES
+
+/// /// Structures
+    Sets
+    Fields 
+    Contours
+    Sequences
+
+/// /// Ideas
+    Pitches
+    Durations 
+    Slots
+    Measures
+
+/// /// Notation
+    Motives
+    Parts
+    Scores
+
+
+
+
+
+

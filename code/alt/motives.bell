@@ -1,0 +1,80 @@
+Select(<...>, $opt, $table, $MTid -> (
+$msg = `SELECT `* `FROM $table `WHERE ;
+$argList = $args(1...$argcount).map($a -> [$a]);
+$id = $argList::1;
+if contains($name) == 2 then SQL = $msg `id `= $id
+else if contains($name) == 16 then SQL = $msg `name `= $id
+else if contains($name) == 32 then (
+    $newName = apply(CTORS.$table, $argList, $opt [`name $MTid]);
+    if length($newName) > 1 then $info = $newName ; 
+    SQL = $msg `name `= $newName
+)
+else $info = "ERROR first Select argument must be int string or llll" $argList;
+$info ||| VIEW
+)); 
+
+
+MT = ($name, $RT, $PT, $EX, $RTopt, $PTopt, $EXopt -> (
+$error = 0;
+$errorLocation = "for Motive constructor with arguments " $args(1...$argcount);
+$content = [`total ][`chords ][`durations ][`velocities ][`ties ][`slots ][`breakpoints ][`header ];
+
+if !$error then $RTinfo = Select($RT, @opt $RTopt @table `RT @MTid $name);
+if contains($RTinfo:1) == 16 then $error = $RTinfo:1 $errorLocation;
+if !$error then $PTinfo = Select($PT, @opt $PTopt @table `PT @MTid $name);
+if contains($PTinfo:1) == 16 then $error = $PTinfo:1 $errorLocation;
+if !$error then $EXinfo = Select($EX, @opt $EXopt @table `EX @MTid $name);
+if contains($EXinfo:1) == 16 then $error = $EXinfo:1 $errorLocation;
+
+if !$error then (
+$ids = $RTinfo:1 $PTinfo:1 $EXinfo:1 ;
+$content.'total' = $RTinfo.'total' ;  
+$durations = $RTinfo.'durations' ;
+$velocities = $RTinfo.'velocities' ;
+$chords = $PTinfo.'chords' ;
+$ties = $PTinfo.'ties' ;
+$slots = $EXinfo.'slots' ;
+$breakpoints = $EXinfo.'breakpoints' ;
+$chordIndex = 0;
+$slotIndex = 0;
+for $duration $index in $durations do (
+    if $duration > 0 then (
+        if $chordIndex < length($chords) then $chordIndex += 1;
+        $chord = $chords:$chordIndex;
+        $tie = $ties:$chordIndex;
+        $content.'chords' _=  $chord; 
+        $content.'ties' _=  $tie;
+        $content.'breakpoints' _= $breakpoints:$chordIndex ||| [];
+        if $slotIndex < length($slots) then $slotIndex += 1;
+        $content.'slots' _= $slots:$slotIndex
+    )
+    else (
+        $content.'chords' _= [];
+        $content.'ties' _= [];
+        $content.'velocities' _= [];
+        $content.'breakpoints' _= [];
+        if $EXinfo.'rests' then (
+            if $slotIndex < length($slots) then $slotIndex += 1;
+            $content.'slots' _= $slots:$slotIndex 
+        )
+        else $content.'slots' _= []
+        )
+    )
+    $content.'velocities' _= $velocities:$index;
+    $content.'durations' _= $duration
+);
+
+
+$content = $RTinfo:4 $PTinfo:2 $RTinfo:1 $PTinfo:3 $EXinfo:1 
+)
+else (
+    $ids _= $RTinfo:1;
+    $content.'total' = $RTinfo.'total';
+    $content.'rhythms' = $RTinfo.'durations';
+    $content.'ties' = $RTinfo.'ties'
+)
+
+if !$error then DB = `addentry `MT [`name $name] [`RT $RT] [`PT $PT] [`EX $EX] 
+else print($error $errorLocation);
+$name
+))

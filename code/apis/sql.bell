@@ -1,0 +1,66 @@
+Create = ($table, $name, $optArgs -> (
+    $errorLocation = "at Create with arguments" $args(1...$argcount);
+    if contains($table $name) != 16 then $error = "wrong arg types for table and name"
+    else if contains($optArgs) != 32 then $error = "wrong arg type for constructor"
+    else (
+            SQL = `SELECT `name `FROM $table;
+            $names = thin(flat(QUERY_RESULT));
+            print(`names $names);
+            if length(finditems($names, $name)) == 0 && $id != 'name' then ( 
+                
+            print(`optArgs $optArgs);
+                if CTORS.$table then $newEntry = apply(CTORS.$table, null, $optArgs)
+                else $newEntry = apply(CTORS.'NEW', null, $optArgs [`table $table]);
+                if contains($newEntry:1) == 16 then $error = $newEntry
+                else DB = `addentry $table [`name $name] $newEntry
+            )
+            else if $id == 'name' then $error = "cannot use name 'name' "
+            else $error = "name " $id " already exists!"
+    );
+    if $error then print(`ERROR $error $errorLocation)
+    else $name
+));
+
+Select = ($table, $id -> (
+    $msg = `SELECT `* `FROM $table `WHERE ; 
+    if contains($id) == 16 then SQL = $msg `name `= $id
+    else $error = print("ERROR id must be string " $id);
+    $error ||| QUERY_RESULT.flat(1)
+)); 
+## commands: 0||'del' - delete, 1||'add' - insert, 2||'set' - replace 
+## add logic for getting ALL rows  
+
+Edit = ($tableAddr, $values, $entryAddrs, $entryKeys -> (
+    $tableID = $tableAddr:1;
+    print(`tableID $tableID);
+    $tableRow = $tableAddr:2;  
+    print(`tableRow $tableRow); 
+    $tableColumn = $tableAddr:3;
+    print(`tableColumn $tableColumn);
+    $targetRow = Select($tableID, $tableRow);
+        if $targetRow then (
+            print(`targetRow $targetRow);
+            $targetEntry = $targetRow.$tableColumn;
+            print(`targetEntry $targetEntry );
+            ## if targetEntry is not an llll 
+            if !(depth($targetEntry)-1) then ( 
+                if $values.flat(1) then SQL = `UPDATE $tableID `SET $tableColumn `= $values.flat(1) `WHERE `name `= $tableRow
+                else $error = print("cannot delete only element")
+            )
+            else (
+                $newEntry = iterEntry($targetEntry, $values, $entryAddrs, $entryKeys);
+                SQL = `DELETE `FROM $tableID `WHERE `name `=  $tableRow;
+                $targetRow.$tableColumn = $newEntry;
+                    print(`newTargetRow $targetRow);
+                ## Use Create with new 
+                if $tableID == `BP then Create($tableID, $targetRow.'name', $targetRow:3)
+                else if $tableID == `RT then Create($tableID, $targetRow.'name', $targetRow:[[3 4]])
+                else if $tableID == `MS then Create($tableID, $targetRow.'name', $targetRow:[[4 5]])
+                else if $tableID == `PT then Create($tableID, $targetRow.'name', $targetRow:[[3 5]])
+                else if $tableID == `SL then Create($tableID, $targetRow.'name', $targetRow:[[3 6]])
+                else Create($tableID, $targetRow.'name', $targetRow:[[3 -1]]); ## SR and HD
+                Select($tableID, $tableRow)
+    )
+)
+    else print("row with name " $tableRow " not found")
+))

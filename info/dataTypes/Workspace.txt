@@ -1,0 +1,6 @@
+A workspace is a list of files keyed by folders, which are either:
+Shelves
+Globals
+
+new are automatically added to a workspace when read into a shelf
+and loaded into the respective Shelves when a new workspace is loaded 

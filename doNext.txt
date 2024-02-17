@@ -1,0 +1,29 @@
+
+
+
+
+
+
+
+
+
+
+
+Design:
+finish the "performers" table
+determine new piece Creation protocol
+determine piece join protocol
+determine messaging protocol
+
+Code:
+Constructor for Motives
+Fix Motive Display.
+// has components (Pitches, Rhythms and Extras) as arguments
+// input as row_ids or as values (then dynamically create the rows in those tables)
+Constructor for Measures
+Create Score Display. (from Pitches Rhythms Extras Measures Performers)
+Constructor for Score (from performer_id ONLY)
+SCULPT Constructor for Motives
+Score API for adding motives or components 
+
+

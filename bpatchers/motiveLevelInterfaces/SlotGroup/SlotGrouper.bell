@@ -1,0 +1,28 @@
+$newSlotSequence = ActiveSlotSequence;
+$iterSet = ($addrs, $counts, $dims, $depth -^ $iterSet, $newSlotSequence -> ( 
+    $depth -= 1; 
+    if $depth == 0 then (
+    $slotKey = $addrs:-1;
+    if $slotKey then $newSlot = [$slotKey ActiveSlotGroup.$slotKey] 
+    else $newSlot =  ActiveSlotGroup;
+    $slotIndex =  findaddrs($newSlotSequence:$counts, $slotKey):(1 1);
+    if $slotIndex then (
+        $newSlotSequence = $newSlotSequence.subs($counts $slotIndex, $newSlot)
+    )
+    else (
+        $newSlotSequence = $newSlotSequence.insert($counts 1, $newSlot)
+    )
+    ) 
+    else (
+        if $addrs:$depth then $iter = $addrs:$depth else $iter = 1...$dims:$depth; 
+        for $addr in $iter do ( 
+            $counts = subs($counts, $depth, $addr); 
+            $iterSet( $addrs, $counts, $dims, $depth ) 
+            ) 
+        ) 
+)
+);
+
+$iterSet($x1, 0, $x2, 2);
+ActiveSlotSequence = $newSlotSequence
+

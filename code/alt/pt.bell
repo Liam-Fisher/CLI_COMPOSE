@@ -1,0 +1,62 @@
+
+$notenames = sort(thin(flat($chords))); print(`notenames $notenames);
+$contourheight = length($notenames); print(`contourheight $contourheight);
+$ctRootIndex = flat(findaddrs($notenames, $root));
+
+for $chord in $chords with @unwrap 1 do (
+$pitchAddr = for $pitch in $chord collect flat(findaddrs($notenames, $pitch));
+$contour _= [($pitchAddr - $ctRootIndex)]
+);
+
+$noteScale = thin($notenames%C1);
+$slRootIndex = flat(findaddrs($noteScale, $rootNote%C1)) ; 
+$noteScale .= rot($slRootIndex-1);
+$scale = thin(flat(cents($noteScale)))/$stepSize;
+
+$info = [`steps $steps][`root $rootNote][`contour [$contour]][`scale [$scale]][`voices $voices][`elements $elements];
+
+if $error then print("ERROR create pitches failed " $error)
+else $obj = `addentry `PT [`name $name] [`chords [$chords]] [`ties [$ties]] $info ;
+$error ||| $obj
+
+$gridDivisions = 1;
+$maxIter = 100;
+$tolerance = 0.1;
+
+if !contains($td) then (
+$basePitches = sort(thin($notenames%C1));
+$baseCents = float(alter($basePitches))*200 + cents(makepitch(degree($basePitches),1,0));
+print(`basePitchCount length($basePitches));
+for $c $ci in $baseCents, $p $pi in $basePitches do print(`pitch $p `cents $c);
+for $cents in $baseCents do (
+$match = 1;
+$iter = 0;
+$errorMargins = null;
+while $match == 1 do (
+$iter += 1;
+$mult = $cents*$iter;
+$approxPitches = approx($pitch, $iter);
+$approxCents = float(alter($approxPitches))*200 + cents(makepitch(degree($approxPitches),1,0));
+$approximations = $cents - $approxCents;
+$currentErrors = pow($approximations, 2);
+$currentError = $currentErrors.reduce(($x, $y -> $x+$y));
+print(`got $mult `at $iter `error $currentError);
+if $currentError < $tolerance then $match = $iter
+else if $iter == $maxIter then $match = 0
+else $errorMargins _= $currentError
+);
+if $match == 0 then $gridDivisions _= (minmax($errorMargins)::2)
+else $gridDivisions _= $match 
+);
+print(`gridDivisions $gridDivisions)
+);
+else if contains($td) == 2 then (
+$basePitches = approx(sort(thin($notenames%C1)), $td);
+$baseCents = float(alter($basePitches))*200 + cents(makepitch(degree($basePitches),1,0));
+$scale = $baseCents/200
+)
+else $error = "tone division parameter ($td) must be an integer" ;
+
+
+
+

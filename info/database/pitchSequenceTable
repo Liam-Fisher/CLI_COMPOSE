@@ -1,0 +1,10 @@
+A sequence of pitches:
+Has the following columns: 
+pitches, contour, scale, elements, tuning
+content is an llll with pitches (C#4, Dv5) etc... 
+ties is an llll with 
+elements is the number of elements in the scale.
+tuning is an integer pointer to an entries in the tuning table, 
+these are 0 if the entry does not exist.
+
+scale is an llll with unique entries, 

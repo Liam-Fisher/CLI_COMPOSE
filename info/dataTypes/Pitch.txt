@@ -1,0 +1,72 @@
+There are 4 categories of Frequency Data Structures, 
+values, sets, sequences, spectra and maps.
+
+The base type is "value", which refers to a way of representing a frequency, relative frequencies, or
+
+Frequency, Cents, Intervals, Pitches, Pitch Classes
+Frequency can be expressed in cycles per second or samples per period.
+Cents are the logarithmic measure between two frequencies, with 1200 cents being
+an octave. 
+Abstraction: **
+Pitches have a symbol (usually A-G), an integer, and an alteration in cents.
+Detuned Notes also express absolute frequencies, and are the result of mapping tuned notes to a  
+
+An Interval is equivalent to Cents but expressed as a rational number.
+
+
+Abstracted base types
+ Degrees, PitchClass, Order
+
+Degrees are indices of a Scale,
+Scale[Degrees] = 
+
+The spectra Types: 
+Chord, Voicing, IntervalStack
+Chords are an unordered set of Pitches from a 
+
+
+
+The Set Types: 
+Scale, PitchClassSet, IntervalClassString, IntervalClassVector
+Scales are sets of Pitches, ex. C D E G A
+PitchClassSets are sets of 
+
+The Seq Types:
+freqSeq, pitchSeq, IntervalCycle, Contour
+freqSeq is a sequence of frequencies ex. 440 880 660 330
+
+pitchSeq is a sequence of Pitches ex. C5 B4 Ab5 G5 
+
+
+
+an intervalCycle is a cyclic sequence of intervals. it does not define a starting point. 
+and the product must be 1
+ex. the frequencies 440 880 660 330 would have an interval sequence of 2 3/4 1/2 4/3
+
+
+Contour is a relative ordering of elements in a Sequence. 
+ex. the pitch sequence C5 B4 Ab5 G5 would have contour 1 0 3 2
+
+
+
+
+[ `set ($addrs, $counts = 0 0, $depth = 3 -> ( 
+    $depth -= 1; 
+    if $depth == 0 then (
+    $key = $addrs:-1;
+    if $key then $newSlot = [$key ActiveSlotGroup.$key] 
+    else $newSlot =  ActiveSlotGroup;
+    $ind =  findaddrs(ActiveSlotMatrix:$counts, $key):(1 1);
+    if $ind then ActiveSlotMatrix .= subs($counts $ind, $newSlot)
+    else ActiveSlotMatrix .= insert($counts 1, $newSlot);
+    ) 
+    else (
+        if $addrs:$depth then $iter = $addrs:$depth else $iter = 1...SlotAPI.'dims':$depth; 
+        for $addr in $iter do ( 
+            $counts .= subs($depth, $addr); 
+            apply(SlotAPI.'set', [$addrs] [$counts] [$depth]) 
+            ) 
+        ) 
+)
+)
+];

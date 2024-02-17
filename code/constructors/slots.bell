@@ -1,0 +1,9 @@
+($slots, $rests = 0, $HD_id = 1  -> (
+## args are slots, rests, HD_id
+## second arg is a list of 4 boolean flags: 1-3: copyUnassigned? ( Voices, Rows, Cols )
+if !$slots then $error = "no argument for slots"
+$flatSlots = flat($slots, 2);
+$keys = for $slot in $flatSlots collect $slot::1;
+$keySet = sort(thin($keys));
+$error ||| ([`slots [$slots]][`rests [$rests]][`HD_id $HD_id][`keys [$keySet]][`elements length($slots)])
+))

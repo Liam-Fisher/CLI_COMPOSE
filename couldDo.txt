@@ -1,0 +1,50 @@
+IMPORTANT !! ignore question marked ideas, for now...
+
+
+Design:
+// ?? Motive Link Table (distance table with entries encoding relationships)
+// Operator API
+// the "performers" table
+// ? separate "Analysis" tables for the components of Pitches/Rhythms/Extras
+? more velocity information for rhythm table
+// determine messaging protocol
+Code:
+//? Constructors for tunings and performers
+Constructors for Pitches, Rhythms and Extras
+? constructors from components (i.e. Pitches.notes from (scale, constructors
+
+Fix Motive Display.
+// BUILD constructor for Motives
+// has components (Pitches, Rhythms and Extras) as arguments, input as row_ids
+// or as values (then dynamically create the rows in those tables)
+
+// ?  DERIVE Constructor for Motives (newname: string, src_id: int, formula: string) 
+// ??? or DERIVE could implement an "Operator API", and possibly a linkage matrix
+
+Constructor for Measures
+
+Create Score Display. (from Pitches Rhythms Extras Measures Performers)
+Constructor for Score (from performer_id ONLY), adding the 
+SCULPT Constructor for Motives
+Score API for adding motives or components
+? "Form"(structure) column/interface for score containing motive ids and ranges
+
+? Translating bach.score edits to a motive from gathered syntax into its components
+// would then update the existing values at those ids OR create new ones
+// easier for Rhythms and Extras, 
+
+Patching:
+
+The "SendScore" functionality 
+
+The ReceiveScore functionality
+
+The CreatePiece functionality
+The joinPiece functionality
+
+
+UI:
+// ? finish Performer info UI
+// ??? a tuning UI??
+
+

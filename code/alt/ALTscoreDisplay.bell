@@ -1,0 +1,125 @@
+$scoreID = $x1;
+$scoreInfo = Select('SR', $scoreID);
+## print(`scoreInfo $scoreInfo);
+$codes = $scoreInfo.'copycodes';
+##print(`codes $codes);
+## print(`HD_id $scoreInfo.'HD_id');
+$HD = Select('HD', $scoreInfo.'HD_id'):[[2 -1]];
+print(`HDA $HD);
+$HD .= map(($el -> [$el.flat(2)]));
+print(`HDB $HD);
+$numvoices = $HD.'numparts'.reduce(($x -> $x+$y));
+print(`HDnumvoices $numvoices);
+$MS_ids = $scoreInfo.'MS_ids'.flat(1);
+##print(`MS_ids $MS_ids);
+$MS_seqs = for $vIDs in $MS_ids with @unwrap 1 collect ([for $id in $vIDs collect (Select('MS', $id).'measures')]);
+##print(`MS_seqs $MS_seqs);
+$RT_ids = $scoreInfo.'RT_ids'.flat(1);
+$RT_seqs = for $vIDs in $RT_ids with @unwrap 1 collect ([for $id in $vIDs collect (Select('RT', $id):[[3 4]])]); 
+##print(`RT_seqs $RT_seqs);
+$PT_ids = $scoreInfo.'PT_ids'.flat(1);
+$PT_seqs = for $vIDs in $PT_ids with @unwrap 1 collect ([for $id in $vIDs collect (Select('PT', $id):[[3 4]])]); 
+##print(`PT_seqs $PT_seqs);
+$BP_ids = $scoreInfo.'BP_ids'.flat(1);
+$BP_seqs = for $vIDs in $BP_ids with @unwrap 1 collect ([for $id in $vIDs collect (Select('BP', $id).'breakpoints')]);
+print(`BP_seqs $BP_seqs);
+$SL_ids = $scoreInfo.'SL_ids'.flat(1);
+$SL_seqs = for $vIDs in $SL_ids with @unwrap 1 collect ([for $id in $vIDs collect (Select('SL', $id):[[3 5]])]);
+print(`SL_seqs $SL_seqs);
+
+$SL_HD_ids = for $vSeqs in $SL_seqs with @unwrap 1 collect ([for $slot in $vSeqs collect $slot.'HD_id']);
+
+##print(`SL_HD_ids $SL_HD_ids);
+$SL_HD_id = thin(flat($SL_HD_ids));
+##print(`SL_HD_id $SL_HD_id);
+if $SL_HD_id != $HD.'name' then $error = print("wrong SL.HD_id" $SL_HD_id "should all be" $HD.'name');
+
+if !$error then (
+    print(`numvoices $numvoices);
+    for $v in 1...$numvoices do (
+    print(`v $v);
+        if (length($MS_seqs) >= $v) || ($codes.'MS' == 0) then $vMeasuresOut = $MS_seqs::$v;
+    print(`vMeasuresOut $vMeasuresOut);
+        if (length($RT_seqs) >= $v) || ($codes.'RT' == 0) then (
+            $vRhythmsOut = ($RT_seqs::$v).'durations'.flat(1);
+            $vVelocitiesOut = ($RT_seqs::$v).'velocities'.flat(1)
+        );
+    print(`vRhythmsOut $vRhythmsOut);
+    print(`vVelocitiesOut $vVelocitiesOut);
+        if (length($PT_seqs) >= $v) || ($codes.'PT' == 0) then (
+            $vPitchesOut = ($PT_seqs::$v).'chords'.flat(1);
+            $vTiesOut = ($PT_seqs::$v).'ties'.flat(1)
+        );
+    print(`vPitchesOut $vPitchesOut);
+    print(`vTiesOut $vTiesOut);
+        for $r $rIndex in $vRhythmsOut with @unwrap 1 do (
+            if $r < 0 then (
+                $vPitchesOut .= insert($rIndex, []);
+                $vTiesOut .= insert($rIndex, [])
+            )
+            else (
+                if $rIndex > length($vPitchesOut) && $codes.'PT':2 then (
+                $vPitchesOut _= $vPitchesOut:-1;
+                $vTiesOut _= $vTiesOut:-1
+            )
+            )
+        );
+    print(`vPitchesOutInserted $vPitchesOut);
+    print(`vTiesOutInserted $vTiesOut);
+
+        if (length($BP_seqs) >= $v) || ($codes.'BP':1 == 0 ) then (
+            $vBreakpointsOut = ($BP_seqs::$v).flat(1)
+        );
+    print(`vBreakpointsOut $vBreakpointsOut);
+        if (length($SL_seqs) >= $v) || ($codes.'SL':1 == 0) then (
+            $vSlotsOut  = ($SL_seqs::$v).'slots'.flat(1);
+            $slotRests = ($SL_seqs::$v).'rests'.flat(1)
+        );
+    print(`vSlotsOut $vSlotsOut);
+    print(`slotRests $slotRests);
+            for $c $cIndex in $pitchesOut with @unwrap 1 do (
+                if length(flat($c)) then (
+                    if !$vBreakpointsOut:$cIndex then (
+                        if $codes.'BP':2 then $vBreakpointsOut _= $vBreakpointsOut:-1
+                        else $vBreakpointsOut .= insert($cIndex, [])
+                    );
+                    if !$vSlotsOut:$cIndex then (
+                        if $codes.'SL':2 then $vSlotsOut _= $vSlotsOut:-1
+                        else $vSlotsOut .= insert($cIndex, [])
+                    );
+                    for $p $pIndex in $chord do (
+                        if !$vBreakpointsOut:($cIndex $pIndex) then (
+                            if $codes.'BP':3 then $vBreakpointsOut .= insert($cIndex -1, $vBreakpointsOut:($cIndex -1))
+                            else $vBreakpointsOut .= insert($cIndex -1, [])
+                        );
+                        if !$vSlotsOut:($cIndex $pIndex) then (
+                            if $codes.'SL':3 then $vSlotsOut .= insert($cIndex -1, $vSlotsOut:($cIndex -1))
+                            else $vSlotsOut .= insert($cIndex -1, [])
+                        )
+                    )
+                )
+                else (
+                    $vBreakpointsOut .= insert($cIndex, []);
+                    if !$slotRests then $vSlotsOut .= insert($cIndex, [])
+                    )
+            );
+        $measuresOut _= $vMeasuresOut;
+        $rhythmsOut _= [$vRhythmsOut];
+        $velocitiesOut _= [$vVelocitiesOut];
+        $pitchesOut _= [$vPitchesOut];
+        $tiesOut _= [$vVelocitiesOut];
+        $breakpointsOut _= [$vBreakpointsOut];
+        $slotsOut _= [$vSlotsOut]
+    )
+);
+$o1 = $measuresOut;
+$o2 = $pitchesOut;
+$o3 = $rhythmsOut;
+$o4 = $velocitiesOut;
+$o5 = $tiesOut;
+$o6 = $breakpointsOut;
+$o7 = $slotsOut;
+$o8 = $HD.slice(2)::2;
+flat($HD.'attrs', 1)
+
+
